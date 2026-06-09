@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#1a1a1a">
+<title>RITUAL</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a1a; color: #ccc; font-family: 'Courier New', monospace; min-height: 100vh; }
+  .page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+  .card { background: #222; border: 1px solid #333; border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 20px; }
+  .main-page { max-width: 480px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .section { background: #222; border: 1px solid #2a2a2a; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .lbl { font-size: 9px; letter-spacing: 3px; color: #555; text-transform: uppercase; }
+  .meta { font-size: 10px; color: #555; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .row-sb { display: flex; justify-content: space-between; align-items: flex-start; }
+  input[type=text], input[type=number] { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #e8ff47; font-size: 16px; font-family: 'Courier New', monospace; outline: none; width: 100%; }
+  input.sm { font-size: 13px; padding: 7px 10px; }
+  .btn { border-radius: 8px; padding: 9px 14px; font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; font-family: 'Courier New', monospace; border: 1px solid; }
+  .btn-primary { background: #e8ff47; color: #111; border: none; padding: 14px; font-size: 13px; letter-spacing: 3px; width: 100%; }
+  .btn-green { background: #47ff8a22; border-color: #47ff8a; color: #47ff8a; }
+  .btn-yellow { background: #e8ff4722; border-color: #e8ff47; color: #e8ff47; }
+  .btn-blue { background: #47c8ff22; border-color: #47c8ff; color: #47c8ff; }
+  .btn-urgent { background: #ff8a4722; border-color: #ff8a47; color: #ff8a47; padding: 5px 9px; border-radius: 6px; }
+  .btn-sm { background: #2a2a1a; border: 1px solid #e8ff4744; border-radius: 6px; padding: 6px 10px; color: #e8ff47; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'Courier New', monospace; }
+  .btn-x { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 4px 8px; color: #555; font-size: 11px; cursor: pointer; font-family: 'Courier New', monospace; }
+  .btn-dashed { background: transparent; border: 1px dashed #333; border-radius: 8px; padding: 10px; color: #555; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Courier New', monospace; width: 100%; }
+  .btn-log { background: transparent; border: 1px solid #2a2a2a; border-radius: 6px; padding: 5px 10px; color: #555; font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: 'Courier New', monospace; }
+  .debit-num { font-size: 36px; font-weight: 700; color: #e8ff47; letter-spacing: 2px; }
+  .rest-badge { background: #47c8ff22; border: 1px solid #47c8ff44; border-radius: 6px; padding: 5px 10px; font-size: 12px; color: #47c8ff; cursor: pointer; }
+  .timer-circle { width: 150px; height: 150px; border-radius: 50%; border: 3px solid; display: flex; flex-direction: column; align-items: center; justify-content: center; align-self: center; }
+  .timer-time { font-size: 34px; font-weight: 700; letter-spacing: 2px; }
+  .timer-lbl { font-size: 9px; letter-spacing: 3px; color: #555; margin-top: 2px; }
+  .task-card { background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px; }
+  .task-card.active { border-color: #e8ff47; background: #1e1e14; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip { background: #222; border: 1px solid #333; border-radius: 20px; padding: 4px 10px; color: #ccc; font-size: 11px; cursor: pointer; font-family: 'Courier New', monospace; }
+  .notif { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; letter-spacing: 1px; z-index: 1000; white-space: nowrap; color: #111; font-family: 'Courier New', monospace; display: none; }
+  .logo-icon { font-size: 44px; color: #e8ff47; display: block; text-align: center; }
+  .logo-title { font-size: 30px; font-weight: 700; color: #e8ff47; letter-spacing: 12px; text-align: center; }
+  .logo-sub { font-size: 10px; color: #555; letter-spacing: 3px; text-align: center; margin-top: 4px; }
+  .sugg-panel { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .hidden { display: none !important; }
+  #sync-status { font-size: 10px; color: #555; text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- NOTIFICAÇÃO -->
+<div class="notif" id="notif"></div>
+
+<!-- SETUP SCREEN -->
+<div class="page" id="screen-setup">
+  <div class="card">
+    <div>
+      <span class="logo-icon">◈</span>
+      <div class="logo-title">RITUAL</div>
+      <div class="logo-sub">sistema de débito numérico</div>
+    </div>
+    <div id="sync-status">🔄 conectando...</div>
+    <div class="field">
+      <label class="lbl">DÉBITO INICIAL</label>
+      <input type="number" id="debit-input" placeholder="ex: 23450">
+    </div>
+    <div class="field">
+      <label class="lbl">TAREFAS <span id="storage-status" style="color:#555;font-size:9px"></span></label>
+      <div class="row" id="sugg-actions" style="display:none">
+        <button class="btn-sm" onclick="applyLastList()">↩ ÚLTIMA LISTA</button>
+        <button class="btn-sm" onclick="toggleSugg()">★ SUGESTÕES <span id="sugg-arrow">▼</span></button>
+      </div>
+      <div class="sugg-panel hidden" id="sugg-panel">
+        <div class="lbl">TOQUE PARA ADICIONAR</div>
+        <div class="chips" id="sugg-chips"></div>
+      </div>
+      <div id="setup-tasks"></div>
+      <button class="btn-dashed" onclick="addSetupTask()">+ ADICIONAR TAREFA</button>
+    </div>
+    <button class="btn btn-primary" onclick="startApp()">INICIAR RITUAL ◈</button>
+  </div>
+</div>
+
+<!-- MAIN SCREEN -->
+<div class="main-page hidden" id="screen-main">
+
+  <!-- HEADER -->
+  <div class="section">
+    <div class="row-sb">
+      <div>
+        <div class="lbl">DÉBITO ATUAL</div>
+        <div class="debit-num" id="debit-display">0</div>
+        <div class="meta" id="debit-meta"></div>
+        <div class="meta" id="debit-base"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <div class="rest-badge" id="rest-badge" onclick="useRestNow()">😴 0min</div>
+        <button class="btn-log" onclick="toggleLog()">LOG</button>
+        <button class="btn-log" style="color:#ff4747;border-color:#ff474744" onclick="confirmReset()">↺ REINICIAR</button>
+      </div>
+    </div>
+    <!-- DÉBITO EXTRA -->
+    <div>
+      <div class="lbl">ADICIONAR DÉBITO</div>
+      <div class="row">
+        <input type="number" id="extra-input" class="sm" placeholder="ex: 500" style="flex:1" onkeydown="if(event.key==='Enter')addExtraDebit()">
+        <button class="btn btn-yellow" onclick="addExtraDebit()">+ DÉBITO</button>
+      </div>
+      <div id="extra-log" style="margin-top:6px"></div>
+    </div>
+  </div>
+
+  <!-- TIMER -->
+  <div class="section" style="align-items:center">
+    <div class="timer-circle" id="timer-circle" style="border-color:#555">
+      <div class="timer-time" id="timer-display" style="color:#555">25:00</div>
+      <div class="timer-lbl" id="timer-lbl">AGUARDANDO</div>
+    </div>
+    <div class="row" id="timer-controls"></div>
+    <div id="urgent-info" style="font-size:11px;color:#ff8a47;display:none">⚡ MODO URGENTE — pontos serão guardados</div>
+    <div id="paused-info" style="font-size:11px;color:#47c8ff;display:none"></div>
+  </div>
+
+  <!-- TAREFA ATUAL -->
+  <div class="section hidden" id="current-task-section" style="border-color:#e8ff4744">
+    <div class="lbl">TAREFA ATUAL</div>
+    <div id="current-task-name" style="font-size:20px;color:#e8ff47;font-weight:700"></div>
+    <div id="current-task-faixa" class="meta"></div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="field">
+    <div class="lbl" id="tasks-count">TAREFAS (0/0)</div>
+    <div id="task-list"></div>
+    <div id="add-task-area" class="field" style="margin-top:4px">
+      <div class="row">
+        <input type="text" id="new-task-input" class="sm" placeholder="Nova tarefa..." style="flex:1" onkeydown="if(event.key==='Enter')addTask()">
+        <button class="btn btn-green" onclick="addTask()">+ TAREFA</button>
+      </div>
+      <div class="chips" id="task-sugg-chips"></div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="section hidden" id="log-section">
+    <div class="lbl">LOG DE OPERAÇÕES</div>
+    <div id="log-list" style="max-height:200px;overflow-y:auto"></div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUBOyDfAQ2MALVGa3P_PpeHWbmfnVR-2U",
+  authDomain: "toc-app-4ae36.firebaseapp.com",
+  projectId: "toc-app-4ae36",
+  storageBucket: "toc-app-4ae36.firebasestorage.app",
+  messagingSenderId: "403969765129",
+  appId: "1:403969765129:web:c12a8b7c0f2ba5eb1cedd8",
+  databaseURL: "https://toc-app-4ae36-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ─── ESTADO GLOBAL ───────────────────────────────────────────────────────────
+let state = {
+  screen: "setup",
+  debit: 0, dVal: 0, initialDebit: 0,
+  taskList: [], currentId: null, pausedId: null,
+  pausedTimerRemaining: null, pausedWorkedSecs: 0,
+  urgentMode: false, urgentSecs: {},
+  timerSecs: 1500, timerMode: "idle", timerRunning: false,
+  breakPaused: false, restAccum: 0,
+  extraLog: [], debitLog: [],
+  setupTasks: [""],
+  taskHistory: [], suggestions: [],
+};
+
+let intervalId = null;
+let startTs = null;
+let remainingSecs = 1500;
+let workedBefore = 0;
+let breakSecs = 0;
+let savePending = false;
+
+const WORK = 1500, SHORT = 300, LONG = 600;
+
+// ─── FIREBASE SYNC ───────────────────────────────────────────────────────────
+let fbLoaded = false;
+
+// Carrega localStorage imediatamente como fallback
+loadLocal();
+if (state.screen === "main") { showMain(); render(); } else { renderSetup(); }
+
+onValue(ref(db, "ritual/state"), (snapshot) => {
+  document.getElementById("sync-status").textContent = "✅ Firebase conectado";
+  const data = snapshot.val();
+  if (data) {
+    state = { ...state, ...data };
+    if (state.screen === "main") { showMain(); render(); }
+    else { showSetup(); renderSetup(); }
+  }
+  fbLoaded = true;
+}, (err) => {
+  document.getElementById("sync-status").textContent = "❌ Firebase offline — usando local";
+  fbLoaded = true;
+});
+
+function saveState() {
+  const toSave = { ...state };
+  delete toSave.timerRunning; // não salva estado do timer rodando
+  try {
+    set(ref(db, "ritual/state"), toSave);
+    localStorage.setItem("ritual-backup", JSON.stringify(toSave));
+  } catch(e) {
+    localStorage.setItem("ritual-backup", JSON.stringify(toSave));
+  }
+}
+
+function loadLocal() {
+  try {
+    const s = localStorage.getItem("ritual-backup");
+    if (s) state = { ...state, ...JSON.parse(s) };
+  } catch(e) {}
+}
+
+// ─── LÓGICA NÚCLEO ───────────────────────────────────────────────────────────
+function getABC(n) {
+  const last3 = Math.abs(n) % 1000;
+  return { a: Math.floor(last3/100), b: Math.floor((last3%100)/10), c: last3%10 };
+}
+function calcD(n) { return Math.floor(Math.abs(n)/990); }
+function getFirstGroup(n) {
+  const s = Math.abs(n).toString();
+  if (s.length <= 3) return Math.abs(n);
+  let tmp = s;
+  while (tmp.length > 3) tmp = tmp.slice(0,-3);
+  return parseInt(tmp,10);
+}
+function applySeconds(debit, d, seconds) {
+  let val = debit, dVal = d;
+  const log = [];
+  let minutes = Math.floor(seconds/60);
+  const extra9 = Math.floor((seconds%60)/6)*9;
+  let maxIter = minutes*20+100;
+  while (minutes > 0 && maxIter-- > 0) {
+    const {a,b,c} = getABC(val);
+    const bc = b*10+c;
+    if (a===0 && dVal===0) { log.push({type:"PAGO",from:val,to:val}); break; }
+    if (a===0 && dVal>0) {
+      if (bc>0 && bc%9===0) { log.push({type:"+1620",reason:"a=0+bc",from:val,to:val+1620}); val+=1620; dVal--; minutes--; }
+      else { log.push({type:"+810",reason:"a=0",from:val,to:val+810}); val+=810; dVal--; minutes--; }
+    } else if (bc>0 && bc%9===0 && a!==0) {
+      log.push({type:"+810",reason:`bc=${bc}`,from:val,to:val+810}); val+=810; minutes--;
+    } else {
+      log.push({type:"-90",from:val,to:val-90}); val-=90; minutes--;
+    }
+  }
+  if (extra9>0) { log.push({type:`-${extra9}`,reason:"parcial",from:val,to:val-extra9}); val-=extra9; }
+  return {value:val, d:dVal, log};
+}
+function getFaixas(taskList) {
+  const pending = taskList.filter(t => !t.done);
+  if (!pending.length) return [];
+  const size = Math.floor(999/pending.length);
+  return pending.map((t,i) => ({...t, faixaMin:i*size, faixaMax: i===pending.length-1?999:(i+1)*size-1}));
+}
+function simulateMins(debit, d, faixaMax) {
+  let val=debit, dVal=d, mins=0, maxIter=10000;
+  while (maxIter-->0) {
+    if (getFirstGroup(val)>faixaMax) break;
+    const {a,b,c}=getABC(val); const bc=b*10+c;
+    if (a===0&&dVal===0) break;
+    if (a===0&&dVal>0) { if(bc>0&&bc%9===0){val+=1620;dVal--;}else{val+=810;dVal--;} }
+    else if (bc>0&&bc%9===0&&a!==0) { val+=810; }
+    else { val-=90; }
+    mins++;
+  }
+  return mins;
+}
+
+// ─── TIMER ───────────────────────────────────────────────────────────────────
+function fmt(s) { return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; }
+
+function getWorkedSecs() {
+  if (!startTs) return workedBefore;
+  return workedBefore + Math.floor((Date.now()-startTs)/1000);
+}
+
+function stopTimer() { clearInterval(intervalId); intervalId=null; state.timerRunning=false; }
+
+function startTimerFrom(remaining, mode) {
+  stopTimer();
+  remainingSecs = remaining;
+  workedBefore = 0; breakSecs = 0;
+  startTs = Date.now();
+  state.timerMode = mode;
+  state.timerSecs = remaining;
+  state.timerRunning = true;
+  runInterval(remaining, mode, Date.now(), 0);
+  renderTimer();
+}
+
+function runInterval(snapRemaining, snapMode, snapTs, snapWorked) {
+  clearInterval(intervalId);
+  intervalId = setInterval(() => {
+    const elapsed = Math.floor((Date.now()-snapTs)/1000);
+    const remaining = Math.max(0, snapRemaining-elapsed);
+    if (snapMode==="short_break"||snapMode==="rest_saved") breakSecs=elapsed;
+    state.timerSecs = remaining;
+    document.getElementById("timer-display").textContent = fmt(remaining);
+    if (remaining<=0) {
+      clearInterval(intervalId);
+      state.timerRunning=false;
+      onTimerEnd(snapMode, snapWorked+(snapMode==="work"?elapsed:0));
+    }
+  }, 500);
+}
+
+function onTimerEnd(mode, worked) {
+  if (mode==="work") {
+    if (worked>0) applySecsNow(worked);
+    workedBefore=0; startTs=null;
+    notify("Pomodoro finalizado! 5 min de descanso 🍃","info");
+    startTimerFrom(SHORT,"short_break");
+  } else {
+    if (breakSecs>0) applySecsNow(breakSecs);
+    breakSecs=0;
+    state.breakPaused=false;
+    notify("Descanso finalizado! 💪","success");
+    state.timerMode="idle"; state.timerSecs=WORK;
+    remainingSecs=WORK;
+    render();
+  }
+  saveState();
+}
+
+function applySecsNow(secs) {
+  if (secs<=0) return;
+  const r = applySeconds(state.debit, state.dVal, secs);
+  state.debit = r.value; state.dVal = r.d;
+  state.debitLog = [...(state.debitLog||[]), ...r.log].slice(-100);
+  checkUrgentApply(r.value, r.d);
+  renderDebit();
+  renderLog();
+  saveState();
+}
+
+function checkUrgentApply(newDebit, newD) {
+  const pending = state.urgentSecs||{};
+  if (!Object.keys(pending).length) return;
+  const fg = getFirstGroup(newDebit);
+  Object.entries(pending).forEach(([idStr,secs]) => {
+    if (!secs||secs<=0) return;
+    const id=parseInt(idStr);
+    const faixas=getFaixas(state.taskList);
+    const f=faixas.find(f=>f.id===id);
+    if (f&&fg>=f.faixaMin&&fg<=f.faixaMax) {
+      const taskName=state.taskList.find(t=>t.id===id)?.name||`Tarefa ${id}`;
+      notify(`⚡ Aplicando tempo de "${taskName}"!`,"success");
+      const r2=applySeconds(newDebit,newD,secs);
+      state.debit=r2.value; state.dVal=r2.d;
+      state.debitLog=[...(state.debitLog||[]),...r2.log].slice(-100);
+      state.taskList=state.taskList.map(t=>t.id===id?{...t,done:true,waitingApply:false}:t);
+      delete state.urgentSecs[id];
+      saveState();
+      renderDebit(); renderTasks(); renderLog();
+    }
+  });
+}
+
+function handleFaixaChange(newDebit, newTaskList) {
+  if (state.currentId===null) return false;
+  const faixas=getFaixas(newTaskList);
+  if (!faixas.length) return false;
+  const fg=getFirstGroup(newDebit);
+  const correct=faixas.find(f=>fg>=f.faixaMin&&fg<=f.faixaMax)||faixas[0];
+  if (!correct||correct.id===state.currentId) return false;
+  const worked=getWorkedSecs();
+  stopTimer();
+  if (worked>0) state.urgentSecs={...state.urgentSecs,[state.currentId]:(state.urgentSecs[state.currentId]||0)+worked};
+  workedBefore=0; startTs=null; remainingSecs=WORK;
+  state.currentId=correct.id; state.timerMode="idle"; state.timerSecs=WORK;
+  notify(`⚠ Faixa mudou → "${correct.name}". Tempo guardado.`,"error");
+  return true;
+}
+
+// ─── SETUP ───────────────────────────────────────────────────────────────────
+window.startApp = function() {
+  const d = parseInt(document.getElementById("debit-input").value,10);
+  if (isNaN(d)||d<=0) return notify("Débito inválido!","error");
+  const inputs = document.querySelectorAll(".setup-task-input");
+  const valid = Array.from(inputs).map(i=>i.value.trim()).filter(Boolean);
+  if (!valid.length) return notify("Adicione pelo menos 1 tarefa!","error");
+  state.debit=d; state.dVal=calcD(d); state.initialDebit=d;
+  state.taskList=valid.map((name,i)=>({id:i,name,done:false}));
+  state.currentId=null; state.pausedId=null; state.urgentMode=false; state.urgentSecs={};
+  state.timerMode="idle"; state.timerSecs=WORK; state.timerRunning=false;
+  state.breakPaused=false; state.restAccum=0;
+  state.extraLog=[]; state.debitLog=[];
+  workedBefore=0; breakSecs=0; startTs=null; remainingSecs=WORK;
+  // salva histórico
+  state.taskHistory=[...(state.taskHistory||[]),valid];
+  state.suggestions=computeSugg(state.taskHistory);
+  showMain();
+  render();
+  saveState();
+};
+
+window.addSetupTask = function() {
+  state.setupTasks=[...(state.setupTasks||[]),""];
+  renderSetupTasks();
+};
+
+window.removeSetupTask = function(i) {
+  state.setupTasks=state.setupTasks.filter((_,j)=>j!==i);
+  renderSetupTasks();
+};
+
+window.applyLastList = function() {
+  if (!state.taskHistory?.length) return;
+  state.setupTasks=[...state.taskHistory[state.taskHistory.length-1],""];
+  renderSetupTasks();
+};
+
+window.toggleSugg = function() {
+  const p=document.getElementById("sugg-panel");
+  const arrow=document.getElementById("sugg-arrow");
+  p.classList.toggle("hidden");
+  arrow.textContent=p.classList.contains("hidden")?"▼":"▲";
+};
+
+// ─── DÉBITO EXTRA ────────────────────────────────────────────────────────────
+window.addExtraDebit = function() {
+  const extra=parseInt(document.getElementById("extra-input").value,10);
+  if (isNaN(extra)||extra<=0) return notify("Valor inválido!","error");
+  const newInitial=state.initialDebit+extra;
+  const newDebit=state.debit+extra;
+  const dDiff=calcD(newInitial)-calcD(state.initialDebit);
+  const newD=state.dVal+Math.max(0,dDiff);
+  state.initialDebit=newInitial; state.debit=newDebit; state.dVal=newD;
+  state.extraLog=[...(state.extraLog||[]),{value:extra,newInitial,newD,dDiff}];
+  document.getElementById("extra-input").value="";
+  const changed=handleFaixaChange(newDebit,state.taskList);
+  if (!changed) notify(`+${extra.toLocaleString("pt-BR")} adicionado! d+${dDiff}=${newD}`,"success");
+  saveState(); render();
+};
+
+// ─── TAREFAS ─────────────────────────────────────────────────────────────────
+window.addTask = function() {
+  const input=document.getElementById("new-task-input");
+  const name=input.value.trim();
+  if (!name) return notify("Digite o nome da tarefa!","error");
+  const newId=state.taskList.length?Math.max(...state.taskList.map(t=>t.id))+1:0;
+  const newList=[...state.taskList,{id:newId,name,done:false}];
+  state.taskList=newList;
+  input.value="";
+  const changed=handleFaixaChange(state.debit,newList);
+  if (!changed) notify(`✅ "${name}" adicionada!`,"success");
+  saveState(); renderTasks();
+};
+
+window.startTask = function(id, urgent=false) {
+  id=parseInt(id);
+  if (urgent&&state.currentId!==null) {
+    state.pausedId=state.currentId;
+    state.pausedTimerRemaining=remainingSecs;
+    state.pausedWorkedSecs=getWorkedSecs();
+  }
+  state.currentId=id; state.urgentMode=urgent;
+  workedBefore=0; startTs=null; remainingSecs=WORK;
+  const faixas=getFaixas(state.taskList);
+  const task=faixas.find(f=>f.id===id);
+  const limitMins=task?simulateMins(state.debit,state.dVal,task.faixaMax):null;
+  const workTime=limitMins!==null&&limitMins<25?limitMins*60:WORK;
+  startTimerFrom(workTime,"work");
+  notify(urgent?"⚡ Urgente iniciada!":"▶ Pomodoro iniciado!","success");
+  saveState(); render();
+};
+
+window.pauseTask = function() {
+  workedBefore=getWorkedSecs();
+  remainingSecs=state.timerSecs;
+  stopTimer();
+  state.timerRunning=false;
+  notify("⏸ Pausado.","info");
+  saveState(); renderTimer();
+};
+
+window.resumeTask = function() {
+  startTs=Date.now();
+  runInterval(remainingSecs,"work",Date.now(),workedBefore);
+  state.timerRunning=true;
+  notify("▶ Retomado!","success");
+  renderTimer();
+};
+
+window.completeTask = function(id) {
+  id=parseInt(id);
+  const worked=getWorkedSecs();
+  stopTimer();
+  if (state.urgentMode) {
+    if (worked>0) state.urgentSecs={...state.urgentSecs,[id]:(state.urgentSecs[id]||0)+worked};
+    state.taskList=state.taskList.map(t=>t.id===id?{...t,waitingApply:true}:t);
+    state.restAccum=(state.restAccum||0)+LONG;
+    state.urgentMode=false;
+    state.timerMode="idle"; state.timerSecs=WORK; remainingSecs=WORK;
+    if (state.pausedId!==null) {
+      const restoreRemaining=state.pausedTimerRemaining||WORK;
+      const restoreWorked=state.pausedWorkedSecs||0;
+      state.currentId=state.pausedId;
+      workedBefore=restoreWorked; remainingSecs=restoreRemaining; startTs=null;
+      state.timerSecs=restoreRemaining; state.timerMode="work"; state.timerRunning=false;
+      state.pausedId=null; state.pausedTimerRemaining=null; state.pausedWorkedSecs=0;
+      notify(`⚡ Urgente concluída! ${Math.floor(restoreRemaining/60)}min restantes — RETOMAR`,"success");
+    } else {
+      state.currentId=null;
+      notify("⚡ Urgente concluída! Pontos serão aplicados quando a faixa chegar.","success");
+    }
+  } else {
+    if (worked>0) applySecsNow(worked);
+    const saved=state.urgentSecs[id]||0;
+    if (saved>0) { applySecsNow(saved); delete state.urgentSecs[id]; }
+    state.taskList=state.taskList.map(t=>t.id===id?{...t,done:true}:t);
+    state.restAccum=(state.restAccum||0)+LONG;
+    state.currentId=null; state.urgentMode=false;
+    state.timerMode="idle"; state.timerSecs=WORK; remainingSecs=WORK;
+    notify("✅ Concluída! +10min de descanso.","success");
+  }
+  workedBefore=0; startTs=null;
+  saveState(); render();
+};
+
+// ─── DESCANSO ────────────────────────────────────────────────────────────────
+window.useRestNow = function() {
+  if (!state.restAccum||state.restAccum<=0) return notify("Nenhum descanso acumulado!","error");
+  state.restAccum-=LONG;
+  startTimerFrom(LONG,"rest_saved");
+  notify("😴 Descanso de 10 min iniciado!","info");
+  saveState(); renderTimer();
+};
+
+window.pauseBreak = function() {
+  if (breakSecs>0) applySecsNow(breakSecs);
+  state.restAccum=(state.restAccum||0)+state.timerSecs;
+  breakSecs=0; stopTimer();
+  state.breakPaused=true; state.timerMode="idle"; state.timerSecs=WORK; remainingSecs=WORK;
+  notify("⏸ Descanso pausado! Saldo guardado.","info");
+  saveState(); renderTimer();
+};
+
+// ─── SUGESTÕES ───────────────────────────────────────────────────────────────
+function computeSugg(history) {
+  const freq={};
+  (history||[]).forEach(list=>list.forEach(t=>{if(t)freq[t]=(freq[t]||0)+1;}));
+  return Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,20).map(([name,count])=>({name,count}));
+}
+
+// ─── NOTIFICAÇÃO ─────────────────────────────────────────────────────────────
+let notifTimeout;
+window.notify = function(msg,type="info") {
+  const el=document.getElementById("notif");
+  el.textContent=msg;
+  el.style.background=type==="error"?"#ff4747":type==="success"?"#47ff8a":"#47c8ff";
+  el.style.display="block";
+  clearTimeout(notifTimeout);
+  notifTimeout=setTimeout(()=>el.style.display="none",3500);
+};
+function notify(msg,type) { window.notify(msg,type); }
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function showMain() {
+  state.screen = "main";
+  document.getElementById("screen-setup").classList.add("hidden");
+  document.getElementById("screen-main").classList.remove("hidden");
+}
+function showSetup() {
+  state.screen = "setup";
+  document.getElementById("screen-main").classList.add("hidden");
+  document.getElementById("screen-setup").classList.remove("hidden");
+}
+
+function render() { renderDebit(); renderTimer(); renderTasks(); renderLog(); renderCurrentTask(); }
+
+function renderDebit() {
+  const {a,b,c}=getABC(state.debit);
+  document.getElementById("debit-display").textContent=state.debit.toLocaleString("pt-BR");
+  document.getElementById("debit-meta").textContent=`d=${state.dVal} | grupo=${getFirstGroup(state.debit)} | a=${a} b=${b} c=${c}`;
+  document.getElementById("debit-base").textContent=`base=${state.initialDebit.toLocaleString("pt-BR")}`;
+  document.getElementById("rest-badge").textContent=`😴 ${Math.floor((state.restAccum||0)/60)}min`;
+  const el=document.getElementById("extra-log");
+  el.innerHTML=(state.extraLog||[]).map(e=>`<div class="meta">+${e.value.toLocaleString("pt-BR")} → base=${e.newInitial.toLocaleString("pt-BR")} d=${e.newD}</div>`).join("");
+}
+
+function renderTimer() {
+  const mode=state.timerMode;
+  const color=mode==="work"?"#e8ff47":mode==="short_break"?"#47ffc8":mode==="rest_saved"?"#47c8ff":"#555";
+  const lbl=mode==="work"?"FOCO":mode==="short_break"?"PAUSA CURTA":mode==="rest_saved"?"DESCANSO":"AGUARDANDO";
+  document.getElementById("timer-circle").style.borderColor=color;
+  document.getElementById("timer-display").style.color=color;
+  document.getElementById("timer-display").textContent=fmt(state.timerSecs);
+  document.getElementById("timer-lbl").textContent=lbl;
+
+  const ctrl=document.getElementById("timer-controls");
+  const faixas=getFaixas(state.taskList);
+  const fg=getFirstGroup(state.debit);
+  const currentTask=faixas.find(f=>fg>=f.faixaMin&&fg<=f.faixaMax)||faixas[0];
+  let html="";
+  if (mode==="idle"&&currentTask&&!state.breakPaused) html+=`<button class="btn btn-green" onclick="startTask(${currentTask.id})">▶ INICIAR</button>`;
+  if (mode==="work"&&state.timerRunning) html+=`<button class="btn btn-yellow" onclick="pauseTask()">⏸ PAUSAR</button><button class="btn btn-green" onclick="completeTask(${state.currentId})">✓ CONCLUIR</button>`;
+  if (mode==="work"&&!state.timerRunning&&state.currentId!==null) html+=`<button class="btn btn-green" onclick="resumeTask()">▶ RETOMAR</button><button class="btn btn-green" onclick="completeTask(${state.currentId})">✓ CONCLUIR</button>`;
+  if ((mode==="short_break"||mode==="rest_saved")&&state.timerRunning) html+=`<button class="btn btn-yellow" onclick="pauseBreak()">⏸ PAUSAR DESCANSO</button>`;
+  if (state.breakPaused) {
+    html+=`<button class="btn btn-blue" onclick="state.breakPaused=false;useRestNow()">▶ CONTINUAR</button>`;
+    if (state.currentId!==null) html+=`<button class="btn btn-green" onclick="state.breakPaused=false;completeTask(${state.currentId})">✓ CONCLUIR TAREFA</button>`;
+    html+=`<button class="btn btn-yellow" onclick="state.breakPaused=false;renderTimer()">💾 GUARDAR</button>`;
+  }
+  if (mode==="idle"&&!state.breakPaused&&state.restAccum>0&&!state.currentId) html+=`<button class="btn btn-blue" onclick="useRestNow()">😴 DESCANSAR (${Math.floor(state.restAccum/60)}min)</button>`;
+  ctrl.innerHTML=html;
+
+  document.getElementById("urgent-info").style.display=state.urgentMode?"block":"none";
+  const pi=document.getElementById("paused-info");
+  if (state.pausedId!==null) {
+    const pName=state.taskList.find(t=>t.id===state.pausedId)?.name||"";
+    pi.textContent=`⏸ Pausada: ${pName}`; pi.style.display="block";
+  } else { pi.style.display="none"; }
+}
+
+function renderCurrentTask() {
+  const faixas=getFaixas(state.taskList);
+  const fg=getFirstGroup(state.debit);
+  const ct=faixas.find(f=>fg>=f.faixaMin&&fg<=f.faixaMax)||faixas[0];
+  const sec=document.getElementById("current-task-section");
+  if (ct) {
+    sec.classList.remove("hidden");
+    document.getElementById("current-task-name").textContent=ct.name;
+    document.getElementById("current-task-faixa").textContent=`Faixa: ${ct.faixaMin}–${ct.faixaMax} | Grupo: ${fg}`;
+  } else { sec.classList.add("hidden"); }
+}
+
+function renderTasks() {
+  const faixas=getFaixas(state.taskList);
+  const done=state.taskList.filter(t=>t.done).length;
+  document.getElementById("tasks-count").textContent=`TAREFAS (${done}/${state.taskList.length})`;
+  const allDone=state.taskList.length>0&&state.taskList.every(t=>t.done);
+  const listEl=document.getElementById("task-list");
+  const addArea=document.getElementById("add-task-area");
+  if (allDone) {
+    listEl.innerHTML=`<div class="section" style="border-color:#47ff8a;text-align:center"><div style="color:#47ff8a;font-weight:700;margin-bottom:12px">🎉 TODAS CONCLUÍDAS!</div><button class="btn btn-primary" onclick="showSetup();renderSetup()">NOVA LISTA</button></div>`;
+    addArea.classList.add("hidden");
+  } else {
+    addArea.classList.remove("hidden");
+    listEl.innerHTML=faixas.map(f=>{
+      const isCur=state.currentId===f.id;
+      const saved=state.urgentSecs?.[f.id]||0;
+      return `<div class="task-card ${isCur?"active":""}" style="margin-bottom:6px">
+        <div class="row">
+          <span style="font-size:18px;color:${isCur?"#e8ff47":"#444"};width:24px;flex-shrink:0">${f.id}</span>
+          <div style="flex:1">
+            <div style="font-size:13px;color:${isCur?"#e8ff47":"#bbb"}">${f.name}</div>
+            <div class="meta">${f.faixaMin}–${f.faixaMax}</div>
+            ${saved>0?`<div style="font-size:9px;color:#47ffc8">💾 ${saved}s guardados</div>`:""}
+            ${f.waitingApply?`<div style="font-size:9px;color:#ff8a47">⏳ aguardando faixa</div>`:""}
+          </div>
+          ${!isCur&&!f.done?`<button class="btn btn-urgent" onclick="startTask(${f.id},true)">⚡</button>`:""}
+          ${isCur?`<span style="color:#e8ff47;font-size:18px">●</span>`:""}
+        </div>
+      </div>`;
+    }).join("");
+    // sugestões no campo de nova tarefa
+    const suggChips=document.getElementById("task-sugg-chips");
+    suggChips.innerHTML=(state.suggestions||[]).slice(0,8).map(s=>`<button class="chip" onclick="document.getElementById('new-task-input').value='${s.name.replace(/'/g,"\\'")}'">${s.name}</button>`).join("");
+  }
+  renderCurrentTask();
+}
+
+function renderLog() {
+  const log=(state.debitLog||[]).slice(-40).reverse();
+  document.getElementById("log-list").innerHTML=log.map(l=>`<div class="meta"><span style="color:${l.type.includes("+")?"#47ffc8":"#ff8a47"}">${l.type}</span> ${l.from}→${l.to}${l.reason?` (${l.reason})`:""}</div>`).join("");
+}
+
+window.toggleLog = function() {
+  document.getElementById("log-section").classList.toggle("hidden");
+};
+
+window.confirmReset = function() {
+  if (confirm("⚠ Tem certeza que quer reiniciar tudo?\nO débito, tarefas e progresso serão apagados.\n(O histórico de sugestões será mantido)")) {
+    stopTimer();
+    const history = state.taskHistory || [];
+    const suggestions = state.suggestions || [];
+    state = {
+      screen: "setup",
+      debit: 0, dVal: 0, initialDebit: 0,
+      taskList: [], currentId: null, pausedId: null,
+      pausedTimerRemaining: null, pausedWorkedSecs: 0,
+      urgentMode: false, urgentSecs: {},
+      timerSecs: WORK, timerMode: "idle", timerRunning: false,
+      breakPaused: false, restAccum: 0,
+      extraLog: [], debitLog: [],
+      setupTasks: [""],
+      taskHistory: history,
+      suggestions: suggestions,
+    };
+    workedBefore = 0; breakSecs = 0; startTs = null; remainingSecs = WORK;
+    saveState();
+    showSetup();
+    renderSetup();
+    notify("↺ Reiniciado! Histórico de sugestões mantido.", "info");
+  }
+};
+
+function renderSetup() {
+  // sugestões
+  const suggActions=document.getElementById("sugg-actions");
+  if ((state.taskHistory||[]).length>0) suggActions.style.display="flex"; else suggActions.style.display="none";
+  const suggChips=document.getElementById("sugg-chips");
+  suggChips.innerHTML=(state.suggestions||[]).map(s=>`<button class="chip" onclick="addSuggToSetup('${s.name.replace(/'/g,"\\'")}')">
+    ${s.name}<span style="font-size:9px;color:#e8ff47;background:#2a2a1a;border-radius:10px;padding:1px 4px;margin-left:4px">×${s.count}</span>
+  </button>`).join("");
+  if (!state.setupTasks||!state.setupTasks.length) state.setupTasks=[""];
+  renderSetupTasks();
+}
+
+window.addSuggToSetup = function(name) {
+  const empty=state.setupTasks.findIndex(t=>!t.trim());
+  if (empty!==-1) state.setupTasks[empty]=name;
+  else state.setupTasks.push(name);
+  renderSetupTasks();
+};
+
+function renderSetupTasks() {
+  const el=document.getElementById("setup-tasks");
+  el.innerHTML=state.setupTasks.map((t,i)=>`
+    <div class="row" style="margin-bottom:5px">
+      <span style="width:20px;font-size:11px;color:#e8ff47;font-family:'Courier New',monospace;flex-shrink:0">${i}</span>
+      <input type="text" class="sm setup-task-input" style="flex:1" placeholder="Tarefa ${i}" value="${t.replace(/"/g,'&quot;')}" oninput="state.setupTasks[${i}]=this.value">
+      <button class="btn-x" onclick="removeSetupTask(${i})">✕</button>
+    </div>`).join("");
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+setTimeout(()=>{
+  if (!fbLoaded) {
+    document.getElementById("sync-status").textContent="⏳ aguardando Firebase...";
+  }
+},3000);
+</script>
+</body>
+</html>
