@@ -200,22 +200,24 @@ function load(){try{const d=localStorage.getItem("ritual");if(d)S={...S,...JSON.
 function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function getWorked(){return startTs?workedBefore+Math.floor((Date.now()-startTs)/1000):workedBefore}
 function stopTimer(){clearInterval(intervalId);intervalId=null}
-function startTimerFrom(rem,mode){
-  stopTimer();remainingSecs=rem;workedBefore=0;breakSecs=0;startTs=Date.now();
-  S.timerMode=mode;S.timerSecs=rem;
-  runInterval(rem,mode,Date.now(),0);
-  renderTimer()
-}
 function runInterval(snapRem,snapMode,snapTs,snapWorked){
   clearInterval(intervalId);
   intervalId=setInterval(function(){
-    const el=Math.floor((Date.now()-snapTs)/1000);
+    const el=Math.min(Math.floor((Date.now()-snapTs)/1000),snapRem); // cap no máximo permitido
     const rem=Math.max(0,snapRem-el);
     if(snapMode==="short_break"||snapMode==="rest_saved")breakSecs=el;
     S.timerSecs=rem;
     document.getElementById("timer-display").textContent=fmt(rem);
     if(rem<=0){clearInterval(intervalId);onTimerEnd(snapMode,snapWorked+(snapMode==="work"?el:0))}
   },500)
+}
+function startTimerFrom(rem,mode){
+  stopTimer();
+  const ts=Date.now(); // um único timestamp
+  remainingSecs=rem;workedBefore=0;breakSecs=0;startTs=ts;
+  S.timerMode=mode;S.timerSecs=rem;
+  runInterval(rem,mode,ts,0);
+  renderTimer()
 }
 function onTimerEnd(mode,worked){
   if(mode==="work"){
