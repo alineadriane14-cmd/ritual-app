@@ -203,12 +203,17 @@ function stopTimer(){clearInterval(intervalId);intervalId=null}
 function runInterval(snapRem,snapMode,snapTs,snapWorked){
   clearInterval(intervalId);
   intervalId=setInterval(function(){
-    const el=Math.min(Math.floor((Date.now()-snapTs)/1000),snapRem); // cap no máximo permitido
+    const rawEl=Math.floor((Date.now()-snapTs)/1000);
+    const el=Math.min(rawEl,snapRem); // nunca passa do tempo configurado
     const rem=Math.max(0,snapRem-el);
     if(snapMode==="short_break"||snapMode==="rest_saved")breakSecs=el;
     S.timerSecs=rem;
     document.getElementById("timer-display").textContent=fmt(rem);
-    if(rem<=0){clearInterval(intervalId);onTimerEnd(snapMode,snapWorked+(snapMode==="work"?el:0))}
+    if(rem<=0){
+      clearInterval(intervalId);
+      const worked=snapMode==="work"?snapWorked+snapRem:snapRem; // usa snapRem exato sempre
+      onTimerEnd(snapMode,worked)
+    }
   },500)
 }
 function startTimerFrom(rem,mode){
@@ -226,7 +231,7 @@ function onTimerEnd(mode,worked){
     notify("Pomodoro finalizado! 5 min de descanso 🍃","info");
     startTimerFrom(SHORT,"short_break");
   }else{
-    if(breakSecs>0)applyNow(breakSecs);
+    if(worked>0)applyNow(worked); // usa worked (=snapRem exato) em vez de breakSecs
     breakSecs=0;S.breakPaused=false;
     notify("Descanso finalizado! 💪","success");
     S.timerMode="idle";S.timerSecs=WORK;remainingSecs=WORK;
