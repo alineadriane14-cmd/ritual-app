@@ -2,138 +2,255 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a1a1a">
-<title>RITUAL</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f0f">
+<title>Atividades</title>
+<link rel="manifest" href="manifest.json">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#1a1a1a;color:#ccc;font-family:'Courier New',monospace;min-height:100vh}
-.page{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.card{background:#222;border:1px solid #333;border-radius:16px;padding:28px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:20px}
-.main-page{max-width:480px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:14px}
-.section{background:#222;border:1px solid #2a2a2a;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.lbl{font-size:9px;letter-spacing:3px;color:#555;text-transform:uppercase}
-.meta{font-size:10px;color:#555}
-.field{display:flex;flex-direction:column;gap:8px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row-sb{display:flex;justify-content:space-between;align-items:flex-start}
-input[type=text],input[type=number]{background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:10px 14px;color:#e8ff47;font-size:16px;font-family:'Courier New',monospace;outline:none;width:100%}
-input.sm{font-size:13px;padding:7px 10px}
-.btn{border-radius:8px;padding:9px 14px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:'Courier New',monospace;border:1px solid}
-.btn-primary{background:#e8ff47;color:#111;border:none;padding:14px;font-size:13px;letter-spacing:3px;width:100%;cursor:pointer;font-family:'Courier New',monospace;border-radius:8px}
-.btn-green{background:#47ff8a22;border-color:#47ff8a;color:#47ff8a}
-.btn-yellow{background:#e8ff4722;border-color:#e8ff47;color:#e8ff47}
-.btn-blue{background:#47c8ff22;border-color:#47c8ff;color:#47c8ff}
-.btn-red{background:#ff474722;border-color:#ff4747;color:#ff4747}
-.btn-urgent{background:#ff8a4722;border-color:#ff8a47;color:#ff8a47;padding:5px 9px;border-radius:6px;cursor:pointer;font-family:'Courier New',monospace;border:1px solid #ff8a47;font-weight:700}
-.btn-sm{background:#2a2a1a;border:1px solid #e8ff4744;border-radius:6px;padding:6px 10px;color:#e8ff47;font-size:10px;font-weight:700;cursor:pointer;font-family:'Courier New',monospace}
-.btn-x{background:transparent;border:1px solid #333;border-radius:6px;padding:4px 8px;color:#555;font-size:11px;cursor:pointer;font-family:'Courier New',monospace}
-.btn-dashed{background:transparent;border:1px dashed #333;border-radius:8px;padding:10px;color:#555;font-size:11px;letter-spacing:2px;cursor:pointer;font-family:'Courier New',monospace;width:100%}
-.btn-log{background:transparent;border:1px solid #2a2a2a;border-radius:6px;padding:5px 10px;color:#555;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'Courier New',monospace}
-.debit-num{font-size:36px;font-weight:700;color:#e8ff47;letter-spacing:2px}
-.rest-badge{background:#47c8ff22;border:1px solid #47c8ff44;border-radius:6px;padding:5px 10px;font-size:12px;color:#47c8ff;cursor:pointer}
-.timer-circle{width:150px;height:150px;border-radius:50%;border:3px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:center}
-.timer-time{font-size:34px;font-weight:700;letter-spacing:2px}
-.timer-lbl{font-size:9px;letter-spacing:3px;color:#555;margin-top:2px}
-.task-card{background:#1e1e1e;border:1px solid #2a2a2a;border-radius:8px;padding:10px 12px;margin-bottom:6px}
-.task-card.active{border-color:#e8ff47;background:#1e1e14}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{background:#222;border:1px solid #333;border-radius:20px;padding:4px 10px;color:#ccc;font-size:11px;cursor:pointer;font-family:'Courier New',monospace}
-.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;z-index:1000;white-space:nowrap;color:#111;font-family:'Courier New',monospace;display:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f0f0f;--bg2:#181818;--bg3:#202020;
+  --border:#2a2a2a;--border2:#333;
+  --accent:#e8ff47;--accent-dim:#e8ff4722;--accent-dim2:#e8ff4744;
+  --green:#47ff8a;--green-dim:#47ff8a22;
+  --blue:#47c8ff;--blue-dim:#47c8ff22;
+  --red:#ff4747;--red-dim:#ff474722;
+  --orange:#ff8a47;--orange-dim:#ff8a4722;
+  --teal:#47ffc8;
+  --text:#d4d4d4;--text-dim:#666;--text-mid:#999;
+  --radius:14px;--radius-sm:9px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overflow-x:hidden}
+body{padding-top:var(--safe-top)}
+
+/* ── LAYOUT ── */
+.screen{min-height:100vh;display:flex;flex-direction:column}
+.screen-center{align-items:center;justify-content:center;padding:24px 20px}
+.main-wrap{padding:16px 16px calc(16px + var(--safe-bot));display:flex;flex-direction:column;gap:14px;max-width:520px;width:100%;margin:0 auto}
+
+/* ── CARD / SECTION ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;width:100%;max-width:400px}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:14px}
+
+/* ── TYPE ── */
+.app-title{font-size:32px;font-weight:800;color:var(--accent);letter-spacing:-1px}
+.app-sub{font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
+.label{font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.meta{font-size:11px;color:var(--text-dim);line-height:1.5}
+.debit-num{font-size:42px;font-weight:800;color:var(--accent);letter-spacing:-1px;line-height:1}
+
+/* ── INPUTS ── */
+input[type=text],input[type=number]{
+  background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--radius-sm);
+  padding:14px 16px;color:var(--accent);font-size:18px;font-family:inherit;
+  outline:none;width:100%;-webkit-appearance:none;
+  transition:border-color .15s
+}
+input:focus{border-color:var(--accent)}
+input.sm{font-size:15px;padding:12px 14px}
+
+/* ── BUTTONS ── */
+.btn-primary{
+  background:var(--accent);color:#111;border:none;padding:18px;
+  font-size:15px;font-weight:800;letter-spacing:1px;width:100%;
+  cursor:pointer;font-family:inherit;border-radius:var(--radius);
+  transition:transform .1s,opacity .1s
+}
+.btn-primary:active{transform:scale(.97);opacity:.9}
+.btn{
+  border-radius:var(--radius-sm);padding:13px 18px;font-size:13px;font-weight:700;
+  letter-spacing:.5px;cursor:pointer;font-family:inherit;border:1.5px solid;
+  transition:transform .1s,opacity .1s;white-space:nowrap
+}
+.btn:active{transform:scale(.96);opacity:.85}
+.btn-green{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.btn-yellow{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.btn-blue{background:var(--blue-dim);border-color:var(--blue);color:var(--blue)}
+.btn-red{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.btn-orange{background:var(--orange-dim);border-color:var(--orange);color:var(--orange);padding:11px 14px}
+.btn-sm{
+  background:var(--bg3);border:1px solid var(--accent-dim2);border-radius:var(--radius-sm);
+  padding:9px 14px;color:var(--accent);font-size:12px;font-weight:700;
+  cursor:pointer;font-family:inherit
+}
+.btn-x{
+  background:transparent;border:1.5px solid var(--border2);border-radius:var(--radius-sm);
+  padding:10px 14px;color:var(--text-dim);font-size:13px;cursor:pointer;font-family:inherit;
+  min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center
+}
+.btn-dashed{
+  background:transparent;border:1.5px dashed var(--border2);border-radius:var(--radius-sm);
+  padding:14px;color:var(--text-dim);font-size:13px;letter-spacing:1px;
+  cursor:pointer;font-family:inherit;width:100%;
+  transition:border-color .15s,color .15s
+}
+.btn-dashed:active{border-color:var(--accent);color:var(--accent)}
+.btn-log{
+  background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:9px 14px;color:var(--text-dim);font-size:11px;letter-spacing:1px;
+  cursor:pointer;font-family:inherit
+}
+.btn-ghost{
+  background:transparent;border:1.5px solid var(--red-dim);border-radius:var(--radius-sm);
+  padding:12px;color:var(--red);font-size:11px;letter-spacing:1px;
+  cursor:pointer;font-family:inherit;width:100%
+}
+
+/* ── TIMER ── */
+.timer-ring{
+  width:168px;height:168px;border-radius:50%;border:3.5px solid;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  align-self:center;transition:border-color .3s
+}
+.timer-time{font-size:40px;font-weight:800;letter-spacing:-1px;transition:color .3s}
+.timer-lbl{font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-top:3px}
+
+/* ── TASK CARDS ── */
+.task-card{
+  background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  padding:14px 16px;margin-bottom:8px;transition:border-color .2s
+}
+.task-card.active{border-color:var(--accent);background:#1a1a10}
+
+/* ── REST BADGE ── */
+.rest-badge{
+  background:var(--blue-dim);border:1px solid #47c8ff44;border-radius:var(--radius-sm);
+  padding:10px 14px;font-size:13px;font-weight:700;color:var(--blue);cursor:pointer;
+  min-height:44px;display:flex;align-items:center
+}
+
+/* ── CHIPS ── */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:20px;
+  padding:8px 14px;color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;
+  min-height:36px;display:flex;align-items:center
+}
+
+/* ── UTIL ── */
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row-sb{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.field{display:flex;flex-direction:column;gap:10px}
 .hidden{display:none!important}
+.divider{height:1px;background:var(--border);margin:4px 0}
+
+/* ── NOTIF ── */
+.notif{
+  position:fixed;top:calc(var(--safe-top) + 12px);left:50%;transform:translateX(-50%);
+  padding:12px 22px;border-radius:30px;font-size:13px;font-weight:700;letter-spacing:.5px;
+  z-index:9999;white-space:nowrap;color:#111;display:none;
+  box-shadow:0 4px 20px #0008;max-width:calc(100vw - 32px);text-align:center
+}
 </style>
 </head>
 <body>
 
 <div class="notif" id="notif"></div>
 
-<!-- SETUP -->
-<div class="page" id="screen-setup">
-  <div class="card">
-    <div style="text-align:center">
-      <span style="font-size:44px;color:#e8ff47;display:block">◈</span>
-      <div style="font-size:30px;font-weight:700;color:#e8ff47;letter-spacing:12px">RITUAL</div>
-      <div style="font-size:10px;color:#555;letter-spacing:3px;margin-top:4px">sistema de débito numérico</div>
+<!-- ═══ SETUP ═══ -->
+<div class="screen screen-center" id="screen-setup">
+  <div class="card" style="display:flex;flex-direction:column;gap:22px">
+    <div style="text-align:center;padding:8px 0">
+      <div style="font-size:52px;margin-bottom:8px">◈</div>
+      <div class="app-title">Atividades</div>
+      <div class="app-sub">sistema de débito numérico</div>
     </div>
+
     <div class="field">
-      <label class="lbl">DÉBITO INICIAL</label>
-      <input type="number" id="debit-input" placeholder="ex: 23450">
+      <label class="label">Débito inicial</label>
+      <input type="number" id="debit-input" placeholder="ex: 23450" inputmode="numeric">
     </div>
+
     <div class="field">
-      <label class="lbl">TAREFAS</label>
+      <label class="label">Tarefas</label>
       <div class="row" id="sugg-actions" style="display:none">
-        <button class="btn-sm" id="btn-last-list">↩ ÚLTIMA LISTA</button>
-        <button class="btn-sm" id="btn-toggle-sugg">★ SUGESTÕES ▼</button>
+        <button class="btn-sm" id="btn-last-list">↩ Última lista</button>
+        <button class="btn-sm" id="btn-toggle-sugg">★ Sugestões ▼</button>
       </div>
-      <div class="hidden" id="sugg-panel" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:10px">
-        <div class="lbl" style="margin-bottom:8px">TOQUE PARA ADICIONAR</div>
+      <div class="hidden" id="sugg-panel" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px">
+        <div class="label" style="margin-bottom:10px">Toque para adicionar</div>
         <div class="chips" id="sugg-chips"></div>
       </div>
       <div id="setup-tasks"></div>
-      <button class="btn-dashed" id="btn-add-setup-task">+ ADICIONAR TAREFA</button>
+      <button class="btn-dashed" id="btn-add-setup-task">+ Adicionar tarefa</button>
     </div>
-    <button class="btn-primary" id="btn-start">INICIAR RITUAL ◈</button>
+
+    <button class="btn-primary" id="btn-start">Iniciar ◈</button>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main-page hidden" id="screen-main">
-  <div class="section">
-    <div class="row-sb">
+<!-- ═══ MAIN ═══ -->
+<div class="screen hidden" id="screen-main">
+  <div class="main-wrap">
+
+    <!-- Débito -->
+    <div class="section">
+      <div class="row-sb">
+        <div style="flex:1">
+          <div class="label">Débito atual</div>
+          <div class="debit-num" id="debit-display">0</div>
+          <div class="meta" id="debit-meta" style="margin-top:4px"></div>
+          <div class="meta" id="debit-base"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <div class="rest-badge" id="rest-badge">😴 0min</div>
+          <button class="btn-log" id="btn-log">LOG</button>
+        </div>
+      </div>
+      <button class="btn-ghost" id="btn-reset">↺ Reiniciar tudo</button>
+      <div class="divider"></div>
       <div>
-        <div class="lbl">DÉBITO ATUAL</div>
-        <div class="debit-num" id="debit-display">0</div>
-        <div class="meta" id="debit-meta"></div>
-        <div class="meta" id="debit-base"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-        <div class="rest-badge" id="rest-badge">😴 0min</div>
-        <button class="btn-log" id="btn-log">LOG</button>
+        <div class="label" style="margin-bottom:8px">Adicionar débito</div>
+        <div class="row">
+          <input type="number" id="extra-input" class="sm" placeholder="ex: 500" style="flex:1" inputmode="numeric">
+          <button class="btn btn-yellow" id="btn-extra">+ Débito</button>
+        </div>
+        <div id="extra-log" style="margin-top:6px"></div>
       </div>
     </div>
-    <button id="btn-reset" style="background:transparent;border:1px solid #ff474766;border-radius:6px;padding:6px 12px;color:#ff4747;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'Courier New',monospace;width:100%">↺ REINICIAR TUDO</button>
-    <div>
-      <div class="lbl">ADICIONAR DÉBITO</div>
-      <div class="row">
-        <input type="number" id="extra-input" class="sm" placeholder="ex: 500" style="flex:1">
-        <button class="btn btn-yellow" id="btn-extra">+ DÉBITO</button>
+
+    <!-- Timer -->
+    <div class="section" style="align-items:center;gap:16px">
+      <div class="timer-ring" id="timer-circle" style="border-color:var(--text-dim)">
+        <div class="timer-time" id="timer-display" style="color:var(--text-dim)">25:00</div>
+        <div class="timer-lbl" id="timer-lbl">AGUARDANDO</div>
       </div>
-      <div id="extra-log" style="margin-top:6px"></div>
+      <div class="row" style="justify-content:center;flex-wrap:wrap" id="timer-controls"></div>
+      <div id="urgent-info" class="hidden" style="font-size:12px;color:var(--orange);font-weight:600">⚡ Modo urgente — pontos serão guardados</div>
+      <div id="paused-info" class="hidden" style="font-size:12px;color:var(--blue);font-weight:600"></div>
     </div>
-  </div>
 
-  <div class="section" style="align-items:center">
-    <div class="timer-circle" id="timer-circle" style="border-color:#555">
-      <div class="timer-time" id="timer-display" style="color:#555">25:00</div>
-      <div class="timer-lbl" id="timer-lbl">AGUARDANDO</div>
+    <!-- Tarefa atual -->
+    <div class="section hidden" id="current-task-section" style="border-color:var(--accent-dim2)">
+      <div class="label">Tarefa atual</div>
+      <div id="current-task-name" style="font-size:22px;color:var(--accent);font-weight:800"></div>
+      <div id="current-task-faixa" class="meta"></div>
     </div>
-    <div class="row" id="timer-controls"></div>
-    <div id="urgent-info" class="hidden" style="font-size:11px;color:#ff8a47">⚡ MODO URGENTE — pontos serão guardados</div>
-    <div id="paused-info" class="hidden" style="font-size:11px;color:#47c8ff"></div>
-  </div>
 
-  <div class="section hidden" id="current-task-section" style="border-color:#e8ff4744">
-    <div class="lbl">TAREFA ATUAL</div>
-    <div id="current-task-name" style="font-size:20px;color:#e8ff47;font-weight:700"></div>
-    <div id="current-task-faixa" class="meta"></div>
-  </div>
-
-  <div class="field">
-    <div class="lbl" id="tasks-count">TAREFAS</div>
-    <div id="task-list"></div>
-    <div id="add-task-area" class="field" style="margin-top:4px">
-      <div class="row">
-        <input type="text" id="new-task-input" class="sm" placeholder="Nova tarefa..." style="flex:1">
-        <button class="btn btn-green" id="btn-add-task">+ TAREFA</button>
+    <!-- Lista de tarefas -->
+    <div class="field">
+      <div class="label" id="tasks-count">Tarefas</div>
+      <div id="task-list"></div>
+      <div id="add-task-area" class="field">
+        <div class="row">
+          <input type="text" id="new-task-input" class="sm" placeholder="Nova tarefa..." style="flex:1">
+          <button class="btn btn-green" id="btn-add-task">+ Tarefa</button>
+        </div>
+        <div class="chips" id="task-sugg-chips"></div>
       </div>
-      <div class="chips" id="task-sugg-chips"></div>
     </div>
-  </div>
 
-  <div class="section hidden" id="log-section">
-    <div class="lbl">LOG DE OPERAÇÕES</div>
-    <div id="log-list" style="max-height:200px;overflow-y:auto"></div>
+    <!-- Log -->
+    <div class="section hidden" id="log-section">
+      <div class="label">Log de operações</div>
+      <div id="log-list" style="max-height:220px;overflow-y:auto"></div>
+    </div>
+
   </div>
 </div>
 
@@ -160,9 +277,9 @@ function applySeconds(debit,d,seconds){
   return{value:val,d:dVal,log}
 }
 function getFaixas(list){
-  const p=list.filter(t=>!t.done);if(!p.length)return[];
+  const p=list.filter(function(t){return!t.done});if(!p.length)return[];
   const sz=Math.floor(999/p.length);
-  return p.map((t,i)=>({...t,faixaMin:i*sz,faixaMax:i===p.length-1?999:(i+1)*sz-1}))
+  return p.map(function(t,i){return Object.assign({},t,{faixaMin:i*sz,faixaMax:i===p.length-1?999:(i+1)*sz-1})})
 }
 function simulateMins(debit,d,faixaMax){
   let val=debit,dVal=d,mins=0,max=10000;
@@ -193,8 +310,8 @@ let S={
 let intervalId=null,startTs=null,remainingSecs=WORK,workedBefore=0,breakSecs=0;
 
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
-function save(){try{localStorage.setItem("ritual",JSON.stringify(S))}catch(e){}}
-function load(){try{const d=localStorage.getItem("ritual");if(d)S={...S,...JSON.parse(d)}}catch(e){}}
+function save(){try{localStorage.setItem("atividades",JSON.stringify(S))}catch(e){}}
+function load(){try{const d=localStorage.getItem("atividades");if(d)S=Object.assign({},S,JSON.parse(d))}catch(e){}}
 
 // ─── TIMER ───────────────────────────────────────────────────────────────────
 function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
@@ -204,21 +321,21 @@ function runInterval(snapRem,snapMode,snapTs,snapWorked){
   clearInterval(intervalId);
   intervalId=setInterval(function(){
     const rawEl=Math.floor((Date.now()-snapTs)/1000);
-    const el=Math.min(rawEl,snapRem); // nunca passa do tempo configurado
+    const el=Math.min(rawEl,snapRem);
     const rem=Math.max(0,snapRem-el);
     if(snapMode==="short_break"||snapMode==="rest_saved")breakSecs=el;
     S.timerSecs=rem;
     document.getElementById("timer-display").textContent=fmt(rem);
     if(rem<=0){
       clearInterval(intervalId);
-      const worked=snapMode==="work"?snapWorked+snapRem:snapRem; // usa snapRem exato sempre
+      const worked=snapMode==="work"?snapWorked+snapRem:snapRem;
       onTimerEnd(snapMode,worked)
     }
   },500)
 }
 function startTimerFrom(rem,mode){
   stopTimer();
-  const ts=Date.now(); // um único timestamp
+  const ts=Date.now();
   remainingSecs=rem;workedBefore=0;breakSecs=0;startTs=ts;
   S.timerMode=mode;S.timerSecs=rem;
   runInterval(rem,mode,ts,0);
@@ -231,7 +348,7 @@ function onTimerEnd(mode,worked){
     notify("Pomodoro finalizado! 5 min de descanso 🍃","info");
     startTimerFrom(SHORT,"short_break");
   }else{
-    if(worked>0)applyNow(worked); // usa worked (=snapRem exato) em vez de breakSecs
+    if(worked>0)applyNow(worked);
     breakSecs=0;S.breakPaused=false;
     notify("Descanso finalizado! 💪","success");
     S.timerMode="idle";S.timerSecs=WORK;remainingSecs=WORK;
@@ -249,18 +366,18 @@ function applyNow(secs){
 }
 function checkUrgent(nb,nd){
   const fg=getFirstGroup(nb);
-  Object.entries(S.urgentSecs||{}).forEach(function([id,secs]){
+  Object.entries(S.urgentSecs||{}).forEach(function(entry){
+    const id=parseInt(entry[0]);const secs=entry[1];
     if(!secs||secs<=0)return;
-    id=parseInt(id);
     const faixas=getFaixas(S.taskList);
     const f=faixas.find(function(f){return f.id===id});
     if(f&&fg>=f.faixaMin&&fg<=f.faixaMax){
-      const name=S.taskList.find(function(t){return t.id===id})?.name||"Tarefa "+id;
+      const name=(S.taskList.find(function(t){return t.id===id})||{}).name||"Tarefa "+id;
       notify("⚡ Aplicando tempo de \""+name+"\"!","success");
       const r2=applySeconds(nb,nd,secs);
       S.debit=r2.value;S.dVal=r2.d;
       S.debitLog=[...(S.debitLog||[]),...r2.log].slice(-100);
-      S.taskList=S.taskList.map(function(t){return t.id===id?{...t,done:true,waitingApply:false}:t});
+      S.taskList=S.taskList.map(function(t){return t.id===id?Object.assign({},t,{done:true,waitingApply:false}):t});
       delete S.urgentSecs[id];
       save();render()
     }
@@ -273,7 +390,7 @@ function handleFaixaChange(nb,ntl){
   const correct=faixas.find(function(f){return fg>=f.faixaMin&&fg<=f.faixaMax})||faixas[0];
   if(!correct||correct.id===S.currentId)return false;
   const worked=getWorked();stopTimer();
-  if(worked>0)S.urgentSecs={...S.urgentSecs,[S.currentId]:(S.urgentSecs[S.currentId]||0)+worked};
+  if(worked>0)S.urgentSecs=Object.assign({},S.urgentSecs,{[S.currentId]:(S.urgentSecs[S.currentId]||0)+worked});
   workedBefore=0;startTs=null;remainingSecs=WORK;
   S.currentId=correct.id;S.timerMode="idle";S.timerSecs=WORK;
   notify("⚠ Faixa mudou → \""+correct.name+"\". Tempo guardado.","error");
@@ -287,10 +404,9 @@ function startApp(){
   const inputs=document.querySelectorAll(".setup-task-input");
   const valid=Array.from(inputs).map(function(i){return i.value.trim()}).filter(Boolean);
   if(!valid.length)return notify("Adicione pelo menos 1 tarefa!","error");
-  // Se o débito não mudou (nova lista), preserva dVal e initialDebit atuais
-  const isNewList = d === S.debit && S.initialDebit > 0;
+  const isNewList=d===S.debit&&S.initialDebit>0;
   S.debit=d;
-  if(!isNewList){ S.dVal=calcD(d); S.initialDebit=d; }
+  if(!isNewList){S.dVal=calcD(d);S.initialDebit=d;}
   S.taskList=valid.map(function(name,i){return{id:i,name:name,done:false}});
   S.currentId=null;S.pausedId=null;S.urgentMode=false;S.urgentSecs={};
   S.timerMode="idle";S.timerSecs=WORK;S.breakPaused=false;
@@ -310,14 +426,14 @@ function addExtraDebit(){
   S.extraLog=[...(S.extraLog||[]),{value:extra,newInitial:ni,newD:nd,dDiff:dd}];
   document.getElementById("extra-input").value="";
   const changed=handleFaixaChange(nb,S.taskList);
-  if(!changed)notify("+"+extra.toLocaleString("pt-BR")+" adicionado! d+"+dd+"="+nd,"success");
+  if(!changed)notify("+"+extra.toLocaleString("pt-BR")+" adicionado!","success");
   save();render()
 }
 function addTask(){
   const input=document.getElementById("new-task-input");
   const name=input.value.trim();
   if(!name)return notify("Digite o nome da tarefa!","error");
-  const newId=S.taskList.length?Math.max(...S.taskList.map(function(t){return t.id}))+1:0;
+  const newId=S.taskList.length?Math.max.apply(null,S.taskList.map(function(t){return t.id}))+1:0;
   const nl=[...S.taskList,{id:newId,name:name,done:false}];
   S.taskList=nl;input.value="";
   const changed=handleFaixaChange(S.debit,nl);
@@ -353,8 +469,8 @@ function resumeTask(){
 function completeTask(id){
   id=parseInt(id);const worked=getWorked();stopTimer();
   if(S.urgentMode){
-    if(worked>0)S.urgentSecs={...S.urgentSecs,[id]:(S.urgentSecs[id]||0)+worked};
-    S.taskList=S.taskList.map(function(t){return t.id===id?{...t,waitingApply:true}:t});
+    if(worked>0)S.urgentSecs=Object.assign({},S.urgentSecs,{[id]:(S.urgentSecs[id]||0)+worked});
+    S.taskList=S.taskList.map(function(t){return t.id===id?Object.assign({},t,{waitingApply:true}):t});
     S.restAccum=(S.restAccum||0)+LONG;S.urgentMode=false;
     S.timerMode="idle";S.timerSecs=WORK;remainingSecs=WORK;
     if(S.pausedId!==null){
@@ -368,7 +484,7 @@ function completeTask(id){
     if(worked>0)applyNow(worked);
     const saved=S.urgentSecs[id]||0;
     if(saved>0){applyNow(saved);delete S.urgentSecs[id]}
-    S.taskList=S.taskList.map(function(t){return t.id===id?{...t,done:true}:t});
+    S.taskList=S.taskList.map(function(t){return t.id===id?Object.assign({},t,{done:true}):t});
     S.restAccum=(S.restAccum||0)+LONG;S.currentId=null;S.urgentMode=false;
     S.timerMode="idle";S.timerSecs=WORK;remainingSecs=WORK;
     notify("✅ Concluída! +10min de descanso.","success")
@@ -403,6 +519,16 @@ function computeSugg(h){
   const f={};
   (h||[]).forEach(function(list){list.forEach(function(t){if(t)f[t]=(f[t]||0)+1})});
   return Object.entries(f).sort(function(a,b){return b[1]-a[1]}).slice(0,20).map(function(e){return{name:e[0],count:e[1]}})
+}
+function newList(){
+  stopTimer();
+  S.taskList=[];S.currentId=null;S.pausedId=null;S.urgentMode=false;S.urgentSecs={};
+  S.timerMode="idle";S.timerSecs=WORK;S.breakPaused=false;
+  S.setupTasks=[""];
+  workedBefore=0;breakSecs=0;startTs=null;remainingSecs=WORK;
+  S.screen="setup";save();showSetup();renderSetup();
+  notify("Nova lista! Débito mantido: "+S.debit.toLocaleString("pt-BR"),"info");
+  document.getElementById("debit-input").value=S.debit;
 }
 
 // ─── NOTIF ───────────────────────────────────────────────────────────────────
@@ -440,29 +566,34 @@ function renderTimer(){
   const fg=getFirstGroup(S.debit);
   const ct=faixas.find(function(f){return fg>=f.faixaMin&&fg<=f.faixaMax})||faixas[0];
   let h="";
-  if(m==="idle"&&ct&&!S.breakPaused)h+='<button class="btn btn-green" onclick="startTask('+ct.id+',false)">▶ INICIAR</button>';
-  if(m==="work"&&intervalId)h+='<button class="btn btn-yellow" onclick="pauseTask()">⏸ PAUSAR</button><button class="btn btn-green" onclick="completeTask('+S.currentId+')">✓ CONCLUIR</button>';
-  if(m==="work"&&!intervalId&&S.currentId!==null)h+='<button class="btn btn-green" onclick="resumeTask()">▶ RETOMAR</button><button class="btn btn-green" onclick="completeTask('+S.currentId+')">✓ CONCLUIR</button>';
-  if((m==="short_break"||m==="rest_saved")&&intervalId)h+='<button class="btn btn-yellow" onclick="pauseBreak()">⏸ PAUSAR DESCANSO</button>';
+  if(m==="idle"&&ct&&!S.breakPaused)h+='<button class="btn btn-green" onclick="startTask('+ct.id+',false)">▶ Iniciar</button>';
+  if(m==="work"&&intervalId)h+='<button class="btn btn-yellow" onclick="pauseTask()">⏸ Pausar</button><button class="btn btn-green" onclick="completeTask('+S.currentId+')">✓ Concluir</button>';
+  if(m==="work"&&!intervalId&&S.currentId!==null)h+='<button class="btn btn-green" onclick="resumeTask()">▶ Retomar</button><button class="btn btn-green" onclick="completeTask('+S.currentId+')">✓ Concluir</button>';
+  if((m==="short_break"||m==="rest_saved")&&intervalId)h+='<button class="btn btn-yellow" onclick="pauseBreak()">⏸ Pausar descanso</button>';
   if(S.breakPaused){
-    h+='<button class="btn btn-blue" onclick="S.breakPaused=false;useRestNow()">▶ CONTINUAR</button>';
-    if(S.currentId!==null)h+='<button class="btn btn-green" onclick="S.breakPaused=false;completeTask('+S.currentId+')">✓ CONCLUIR TAREFA</button>';
-    h+='<button class="btn btn-yellow" onclick="S.breakPaused=false;renderTimer()">💾 GUARDAR</button>'
+    h+='<button class="btn btn-blue" onclick="S.breakPaused=false;useRestNow()">▶ Continuar</button>';
+    if(S.currentId!==null)h+='<button class="btn btn-green" onclick="S.breakPaused=false;completeTask('+S.currentId+')">✓ Concluir tarefa</button>';
+    h+='<button class="btn btn-yellow" onclick="S.breakPaused=false;renderTimer()">💾 Guardar</button>'
   }
-  if(m==="idle"&&!S.breakPaused&&S.restAccum>0&&!S.currentId)h+='<button class="btn btn-blue" onclick="useRestNow()">😴 DESCANSAR ('+Math.floor(S.restAccum/60)+'min)</button>';
+  if(m==="idle"&&!S.breakPaused&&S.restAccum>0&&!S.currentId)h+='<button class="btn btn-blue" onclick="useRestNow()">😴 Descansar ('+Math.floor(S.restAccum/60)+'min)</button>';
   document.getElementById("timer-controls").innerHTML=h;
   document.getElementById("urgent-info").classList.toggle("hidden",!S.urgentMode);
   const pi=document.getElementById("paused-info");
-  if(S.pausedId!==null){const pn=S.taskList.find(function(t){return t.id===S.pausedId})?.name||"";pi.textContent="⏸ Pausada: "+pn;pi.classList.remove("hidden")}
-  else pi.classList.add("hidden")
+  if(S.pausedId!==null){
+    const pn=(S.taskList.find(function(t){return t.id===S.pausedId})||{}).name||"";
+    pi.textContent="⏸ Pausada: "+pn;pi.classList.remove("hidden")
+  }else pi.classList.add("hidden")
 }
 function renderCurrentTask(){
   const faixas=getFaixas(S.taskList);
   const fg=getFirstGroup(S.debit);
   const ct=faixas.find(function(f){return fg>=f.faixaMin&&fg<=f.faixaMax})||faixas[0];
   const sec=document.getElementById("current-task-section");
-  if(ct){sec.classList.remove("hidden");document.getElementById("current-task-name").textContent=ct.name;document.getElementById("current-task-faixa").textContent="Faixa: "+ct.faixaMin+"–"+ct.faixaMax+" | Grupo: "+fg}
-  else sec.classList.add("hidden")
+  if(ct){
+    sec.classList.remove("hidden");
+    document.getElementById("current-task-name").textContent=ct.name;
+    document.getElementById("current-task-faixa").textContent="Faixa: "+ct.faixaMin+"–"+ct.faixaMax+" | Grupo: "+fg
+  }else sec.classList.add("hidden")
 }
 function renderTasks(){
   const faixas=getFaixas(S.taskList);
@@ -472,31 +603,54 @@ function renderTasks(){
   const listEl=document.getElementById("task-list");
   const addArea=document.getElementById("add-task-area");
   if(allDone){
-    listEl.innerHTML='<div class="section" style="border-color:#47ff8a;text-align:center"><div style="color:#47ff8a;font-weight:700;margin-bottom:12px">🎉 TODAS CONCLUÍDAS!</div><button class="btn-primary" onclick="newList()">NOVA LISTA</button></div>';
+    listEl.innerHTML='<div class="section" style="border-color:var(--green);text-align:center"><div style="color:var(--green);font-weight:800;font-size:18px;margin-bottom:14px">🎉 Todas concluídas!</div><button class="btn-primary" onclick="newList()">Nova lista</button></div>';
     addArea.classList.add("hidden")
   }else{
     addArea.classList.remove("hidden");
     listEl.innerHTML=faixas.map(function(f){
       const isCur=S.currentId===f.id;
-      const saved=S.urgentSecs?.[f.id]||0;
-      return'<div class="task-card'+(isCur?" active":"")+'"><div class="row"><span style="font-size:18px;color:'+(isCur?"#e8ff47":"#444")+';width:24px;flex-shrink:0">'+f.id+'</span><div style="flex:1"><div style="font-size:13px;color:'+(isCur?"#e8ff47":"#bbb")+'">'+f.name+'</div><div class="meta">'+f.faixaMin+'–'+f.faixaMax+'</div>'+(saved>0?'<div style="font-size:9px;color:#47ffc8">💾 '+saved+'s guardados</div>':"")+(f.waitingApply?'<div style="font-size:9px;color:#ff8a47">⏳ aguardando faixa</div>':"")+'</div>'+(!isCur&&!f.done?'<button class="btn-urgent" onclick="startTask('+f.id+',true)">⚡</button>':"")+(isCur?'<span style="color:#e8ff47;font-size:18px">●</span>':"")+'</div></div>'
+      const saved=S.urgentSecs?S.urgentSecs[f.id]||0:0;
+      return'<div class="task-card'+(isCur?" active":"")+'">'+
+        '<div class="row" style="gap:12px">'+
+        '<span style="font-size:20px;color:'+(isCur?"var(--accent)":"var(--text-dim)")+';width:28px;flex-shrink:0;font-weight:800">'+f.id+'</span>'+
+        '<div style="flex:1;min-width:0">'+
+        '<div style="font-size:16px;font-weight:700;color:'+(isCur?"var(--accent)":"var(--text)")+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+f.name+'</div>'+
+        '<div class="meta">'+f.faixaMin+'–'+f.faixaMax+'</div>'+
+        (saved>0?'<div style="font-size:10px;color:var(--teal);font-weight:600">💾 '+saved+'s guardados</div>':"")+
+        (f.waitingApply?'<div style="font-size:10px;color:var(--orange);font-weight:600">⏳ aguardando faixa</div>':"")+
+        '</div>'+
+        (!isCur&&!f.done?'<button class="btn-orange" onclick="startTask('+f.id+',true)">⚡</button>':"")+
+        (isCur?'<span style="color:var(--accent);font-size:22px">●</span>':"")+
+        '</div></div>'
     }).join("");
-    document.getElementById("task-sugg-chips").innerHTML=(S.suggestions||[]).slice(0,8).map(function(s){return'<button class="chip" onclick="document.getElementById(\'new-task-input\').value=\''+s.name.replace(/'/g,"\\'")+'\'">'+s.name+'</button>'}).join("")
+    document.getElementById("task-sugg-chips").innerHTML=(S.suggestions||[]).slice(0,8).map(function(s){
+      return'<button class="chip" onclick="document.getElementById(\'new-task-input\').value=\''+s.name.replace(/'/g,"\\'")+'\'" >'+s.name+'</button>'
+    }).join("")
   }
   renderCurrentTask()
 }
 function renderLog(){
-  document.getElementById("log-list").innerHTML=(S.debitLog||[]).slice(-40).reverse().map(function(l){return'<div class="meta"><span style="color:'+(l.type.includes("+")?"#47ffc8":"#ff8a47")+'">'+l.type+'</span> '+l.from+'→'+l.to+(l.reason?" ("+l.reason+")":"")+'</div>'}).join("")
+  document.getElementById("log-list").innerHTML=(S.debitLog||[]).slice(-40).reverse().map(function(l){
+    return'<div class="meta"><span style="color:'+(l.type.includes("+")?"var(--teal)":"var(--orange)")+'">'+l.type+'</span> '+l.from+'→'+l.to+(l.reason?" ("+l.reason+")":"")+'</div>'
+  }).join("")
 }
 function renderSetup(){
   const ha=(S.taskHistory||[]).length>0;
   document.getElementById("sugg-actions").style.display=ha?"flex":"none";
-  document.getElementById("sugg-chips").innerHTML=(S.suggestions||[]).map(function(s){return'<button class="chip" onclick="addSuggToSetup(\''+s.name.replace(/'/g,"\\'")+'\')">'+s.name+'<span style="font-size:9px;color:#e8ff47;background:#2a2a1a;border-radius:10px;padding:1px 4px;margin-left:4px">×'+s.count+'</span></button>'}).join("");
+  document.getElementById("sugg-chips").innerHTML=(S.suggestions||[]).map(function(s){
+    return'<button class="chip" onclick="addSuggToSetup(\''+s.name.replace(/'/g,"\\'")+'\')">'+s.name+'<span style="font-size:10px;color:var(--accent);background:var(--bg3);border-radius:10px;padding:2px 6px;margin-left:6px">×'+s.count+'</span></button>'
+  }).join("");
   if(!S.setupTasks||!S.setupTasks.length)S.setupTasks=[""];
   renderSetupTasks()
 }
 function renderSetupTasks(){
-  document.getElementById("setup-tasks").innerHTML=(S.setupTasks||[""]).map(function(t,i){return'<div class="row" style="margin-bottom:5px"><span style="width:20px;font-size:11px;color:#e8ff47;flex-shrink:0">'+i+'</span><input type="text" class="sm setup-task-input" style="flex:1" placeholder="Tarefa '+i+'" value="'+t.replace(/"/g,"&quot;")+'" oninput="S.setupTasks['+i+']=this.value"><button class="btn-x" onclick="removeSetupTask('+i+')">✕</button></div>'}).join("")
+  document.getElementById("setup-tasks").innerHTML=(S.setupTasks||[""]).map(function(t,i){
+    return'<div class="row" style="margin-bottom:8px">'+
+      '<span style="width:24px;font-size:13px;color:var(--accent);flex-shrink:0;font-weight:700">'+i+'</span>'+
+      '<input type="text" class="sm setup-task-input" style="flex:1" placeholder="Tarefa '+i+'" value="'+t.replace(/"/g,"&quot;")+'" oninput="S.setupTasks['+i+']=this.value">'+
+      '<button class="btn-x" onclick="removeSetupTask('+i+')">✕</button>'+
+      '</div>'
+  }).join("")
 }
 function addSuggToSetup(name){
   const e=S.setupTasks.findIndex(function(t){return!t.trim()});
@@ -506,20 +660,8 @@ function addSuggToSetup(name){
 function removeSetupTask(i){S.setupTasks=S.setupTasks.filter(function(_,j){return j!==i});renderSetupTasks()}
 function addSetupTask(){S.setupTasks=[...(S.setupTasks||[]),""];renderSetupTasks()}
 function applyLastList(){if(!(S.taskHistory||[]).length)return;S.setupTasks=[...S.taskHistory[S.taskHistory.length-1],""];renderSetupTasks()}
-function toggleSugg(){const p=document.getElementById("sugg-panel");p.classList.toggle("hidden");document.getElementById("btn-toggle-sugg").textContent="★ SUGESTÕES "+(p.classList.contains("hidden")?"▼":"▲")}
+function toggleSugg(){const p=document.getElementById("sugg-panel");p.classList.toggle("hidden");document.getElementById("btn-toggle-sugg").textContent="★ Sugestões "+(p.classList.contains("hidden")?"▼":"▲")}
 function toggleLog(){document.getElementById("log-section").classList.toggle("hidden")}
-function newList(){
-  stopTimer();
-  S.taskList=[];S.currentId=null;S.pausedId=null;S.urgentMode=false;S.urgentSecs={};
-  S.timerMode="idle";S.timerSecs=WORK;S.breakPaused=false;
-  S.setupTasks=[""];
-  workedBefore=0;breakSecs=0;startTs=null;remainingSecs=WORK;
-  // mantém: debit, dVal, initialDebit, restAccum, extraLog, debitLog, taskHistory, suggestions
-  S.screen="setup";save();showSetup();renderSetup();
-  notify("Nova lista! Débito mantido: "+S.debit.toLocaleString("pt-BR"),"info");
-  // preenche débito no campo
-  document.getElementById("debit-input").value=S.debit;
-}
 
 // ─── EVENTOS ─────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded",function(){
