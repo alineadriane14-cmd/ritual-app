@@ -221,6 +221,13 @@ input.sm{font-size:15px;padding:12px 14px}
         <div class="timer-lbl" id="timer-lbl">AGUARDANDO</div>
       </div>
       <div class="row" style="justify-content:center;flex-wrap:wrap" id="timer-controls"></div>
+      <div class="row hidden" id="dur-adjust" style="justify-content:center;gap:6px;flex-wrap:nowrap">
+        <button class="btn btn-yellow" style="padding:11px 10px" onclick="setWorkMin(WORK/60-5)">−5</button>
+        <button class="btn btn-yellow" style="padding:11px 12px" onclick="setWorkMin(WORK/60-1)">−1</button>
+        <div style="min-width:78px;text-align:center"><div class="label">Foco</div><div id="dur-val" style="font-size:16px;font-weight:800;color:var(--accent)">25 min</div></div>
+        <button class="btn btn-yellow" style="padding:11px 12px" onclick="setWorkMin(WORK/60+1)">+1</button>
+        <button class="btn btn-yellow" style="padding:11px 10px" onclick="setWorkMin(WORK/60+5)">+5</button>
+      </div>
       <div id="urgent-info" class="hidden" style="font-size:12px;color:var(--orange);font-weight:600">⚡ Modo urgente — pontos serão guardados</div>
       <div id="paused-info" class="hidden" style="font-size:12px;color:var(--blue);font-weight:600"></div>
     </div>
@@ -296,7 +303,7 @@ function simulateMins(debit,d,faixaMax){
 }
 
 // ─── ESTADO ──────────────────────────────────────────────────────────────────
-const WORK=1500,SHORT=300,LONG=600;
+let WORK=1500;const SHORT=300,LONG=600;
 let S={
   screen:"setup",debit:0,dVal:0,initialDebit:0,
   taskList:[],currentId:null,pausedId:null,
@@ -314,6 +321,12 @@ function save(){try{localStorage.setItem("atividades",JSON.stringify(S))}catch(e
 function load(){try{const d=localStorage.getItem("atividades");if(d)S=Object.assign({},S,JSON.parse(d))}catch(e){}}
 
 // ─── TIMER ───────────────────────────────────────────────────────────────────
+function setWorkMin(m){
+  m=Math.max(1,Math.min(180,Math.round(m)));
+  WORK=m*60;S.workMin=m;
+  if(S.timerMode==="idle"){S.timerSecs=WORK;remainingSecs=WORK}
+  save();renderTimer()
+}
 function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function getWorked(){return startTs?workedBefore+Math.floor((Date.now()-startTs)/1000):workedBefore}
 function stopTimer(){clearInterval(intervalId);intervalId=null}
@@ -341,15 +354,35 @@ function startTimerFrom(rem,mode){
   runInterval(rem,mode,ts,0);
   renderTimer()
 }
+function beepAndVibrate(pattern){
+  // Vibração
+  try{if(navigator.vibrate)navigator.vibrate(pattern||[300,100,300])}catch(e){}
+  // Som via Web Audio API
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    function beep(freq,start,dur){
+      const o=ctx.createOscillator();const g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=freq;o.type="sine";
+      g.gain.setValueAtTime(0,ctx.currentTime+start);
+      g.gain.linearRampToValueAtTime(0.4,ctx.currentTime+start+0.02);
+      g.gain.linearRampToValueAtTime(0,ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start);o.stop(ctx.currentTime+start+dur+0.05)
+    }
+    beep(880,0,0.18);beep(1100,0.22,0.18);beep(1320,0.44,0.28)
+  }catch(e){}
+}
 function onTimerEnd(mode,worked){
   if(mode==="work"){
     if(worked>0)applyNow(worked);
     workedBefore=0;startTs=null;
+    beepAndVibrate([200,80,200,80,400]);
     notify("Pomodoro finalizado! 5 min de descanso 🍃","info");
     startTimerFrom(SHORT,"short_break");
   }else{
     if(worked>0)applyNow(worked);
     breakSecs=0;S.breakPaused=false;
+    beepAndVibrate([400,100,400]);
     notify("Descanso finalizado! 💪","success");
     S.timerMode="idle";S.timerSecs=WORK;remainingSecs=WORK;
     render()
@@ -452,7 +485,7 @@ function startTask(id,urgent){
   const faixas=getFaixas(S.taskList);
   const task=faixas.find(function(f){return f.id===id});
   const lm=task?simulateMins(S.debit,S.dVal,task.faixaMax):null;
-  const wt=lm!==null&&lm<25?lm*60:WORK;
+  const wt=lm!==null&&lm*60<WORK?lm*60:WORK;
   startTimerFrom(wt,"work");
   notify(urgent?"⚡ Urgente iniciada!":"▶ Pomodoro iniciado!","success");
   save();render()
@@ -493,8 +526,15 @@ function completeTask(id){
 }
 function useRestNow(){
   if(!S.restAccum||S.restAccum<=0)return notify("Nenhum descanso acumulado!","error");
-  S.restAccum-=LONG;startTimerFrom(LONG,"rest_saved");
-  notify("😴 Descanso de 10 min iniciado!","info");save();renderTimer()
+  const maxMin=Math.floor(S.restAccum/60);
+  const input=prompt("Quantos minutos de descanso? (saldo: "+maxMin+"min)",""+maxMin);
+  if(input===null)return; // cancelou
+  const mins=parseInt(input,10);
+  if(isNaN(mins)||mins<=0)return notify("Valor inválido!","error");
+  const secs=mins*60;
+  if(secs>S.restAccum)return notify("Saldo insuficiente! Máximo: "+maxMin+"min","error");
+  S.restAccum-=secs;startTimerFrom(secs,"rest_saved");
+  notify("😴 Descanso de "+mins+"min iniciado!","info");save();renderTimer()
 }
 function pauseBreak(){
   if(breakSecs>0)applyNow(breakSecs);
@@ -508,7 +548,7 @@ function confirmReset(){
     const h=S.taskHistory||[],sg=S.suggestions||[];
     S={screen:"setup",debit:0,dVal:0,initialDebit:0,taskList:[],currentId:null,pausedId:null,
       pausedTimerRemaining:null,pausedWorkedSecs:0,urgentMode:false,urgentSecs:{},
-      timerSecs:WORK,timerMode:"idle",breakPaused:false,restAccum:0,
+      workMin:WORK/60,timerSecs:WORK,timerMode:"idle",breakPaused:false,restAccum:0,
       extraLog:[],debitLog:[],setupTasks:[""],taskHistory:h,suggestions:sg};
     workedBefore=0;breakSecs=0;startTs=null;remainingSecs=WORK;
     save();showSetup();renderSetup();
@@ -575,8 +615,10 @@ function renderTimer(){
     if(S.currentId!==null)h+='<button class="btn btn-green" onclick="S.breakPaused=false;completeTask('+S.currentId+')">✓ Concluir tarefa</button>';
     h+='<button class="btn btn-yellow" onclick="S.breakPaused=false;renderTimer()">💾 Guardar</button>'
   }
-  if(m==="idle"&&!S.breakPaused&&S.restAccum>0&&!S.currentId)h+='<button class="btn btn-blue" onclick="useRestNow()">😴 Descansar ('+Math.floor(S.restAccum/60)+'min)</button>';
+  if(m==="idle"&&!S.breakPaused&&S.restAccum>0)h+='<button class="btn btn-blue" onclick="useRestNow()">😴 Descansar ('+Math.floor(S.restAccum/60)+'min)</button>';
   document.getElementById("timer-controls").innerHTML=h;
+  document.getElementById("dur-adjust").classList.toggle("hidden",!(m==="idle"&&!S.breakPaused));
+  document.getElementById("dur-val").textContent=Math.round(WORK/60)+" min";
   document.getElementById("urgent-info").classList.toggle("hidden",!S.urgentMode);
   const pi=document.getElementById("paused-info");
   if(S.pausedId!==null){
@@ -677,8 +719,17 @@ document.addEventListener("DOMContentLoaded",function(){
   document.getElementById("btn-log").onclick=toggleLog;
   document.getElementById("btn-reset").onclick=confirmReset;
   load();
+  WORK=(S.workMin||25)*60;
+  if(S.timerMode==="idle"){S.timerSecs=WORK;remainingSecs=WORK}
   if(S.screen==="main"){showMain();render()}else{renderSetup()}
 });
+
+// ─── PWA SERVICE WORKER ───────────────────────────────────────────────────────
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("/sw.js").catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
